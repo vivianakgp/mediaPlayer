@@ -8,8 +8,22 @@ function MediaPlayer(config) {
   this.initPlugins();
 }
 MediaPlayer.prototype.initPlugins = function () {
+  // para tener contro sobre la cantidad de datos
+  // que le voy a pasar a los plugins y que no tengan acceso a todo el player
+  const player = {
+    play: () => this.play(),
+    pause: () => this.pause(),
+    media: this.media,
+    // creamos propiedad virtual get and set
+    get muted() {
+      return this.media.muted;
+    },
+    set muted(value) {
+      this.media.muted = value;
+    },
+  };
   this.plugins.forEach((plugin) => {
-    plugin.run(this);
+    plugin.run(player);
   });
 };
 MediaPlayer.prototype.play = function () {
